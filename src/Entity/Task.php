@@ -4,6 +4,10 @@ namespace App\Entity;
 
 class Task
 {
+
+    const STATUS_CREATED = 'created';
+    const STATUS_FINISHED = 'finished';
+
     /**
      * @var int
      */
@@ -72,5 +76,14 @@ class Task
     {
         $this->description = $description;
         return $this;
+    }
+
+    public function getDescriptionShort(): string
+    {
+        $description = strip_tags($this->getDescription());
+        if (mb_strlen($description) > 100) {
+            $description = trim(mb_substr($description, 0, 100), " \t\n\r\0\x0B.,") . '...';
+        }
+        return $description;
     }
 }

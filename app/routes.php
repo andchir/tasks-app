@@ -2,6 +2,7 @@
 
 use \App\Controller\HomepageController;
 use \App\Controller\AuthController;
+use App\Controller\TaskController;
 use \Doctrine\ORM\EntityManagerInterface;
 use \Bramus\Router\Router;
 
@@ -21,14 +22,18 @@ $router->match('GET', '/', function () use ($config, $entityManager) {
     echo $controller->indexAction();
 });
 
+// Authorization
 $router->match('GET', '/auth', function () use ($config, $entityManager) {
     $controller = new AuthController($config['app'], $entityManager);
     echo $controller->authAction();
 });
 
-//$router->mount('/', function() use ($router, $config, $entityManager) {
-//    var_dump('home');
-//});
+// Tasks
+$router->mount('/tasks', function() use ($router, $config, $entityManager) {
 
-//$router->get('/', function() { echo 'Index'; });
-$router->get('/hello', function() { echo 'Hello!'; });
+    $controller = new TaskController($config['app'], $entityManager);
+
+    $router->match('GET|POST', '/add', function() use ($controller) {
+        echo $controller->addPageAction();
+    });
+});

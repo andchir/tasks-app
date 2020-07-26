@@ -8,6 +8,10 @@
             <div class="row">
                 <div class="col-12 col-md-6 offset-md-3">
 
+                    <div class="mb-3">
+                        <a href="<?= $config['basePath'] ?>">Home page</a>
+                    </div>
+
                     <h1>Sign in</h1>
 
                     <form action="" method="post">
