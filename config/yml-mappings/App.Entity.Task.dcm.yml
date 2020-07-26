@@ -1,5 +1,6 @@
 App\Entity\Task:
     type: entity
+    repositoryClass: App\Repository\TaskRepository
     table: tasks
     id:
         id:

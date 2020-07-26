@@ -13,7 +13,14 @@
             <div class="float-right">
                 <a class="btn btn-success" href="<?= $config['basePath'] ?>tasks/add">Add task</a>
             </div>
-            <h1>Welcome!</h1>
+            <div class="mb-3">
+                Order by:&nbsp;
+                <select class="custom-select w-auto" onchange="onOrderChange(this)">
+                    <option value="username"<?php if($data['orderBy'] == 'username'): ?> selected<?php endif; ?>>Username</option>
+                    <option value="email"<?php if($data['orderBy'] == 'email'): ?> selected<?php endif; ?>>Email</option>
+                    <option value="status"<?php if($data['orderBy'] == 'status'): ?> selected<?php endif; ?>>Status</option>
+                </select>
+            </div>
 
             <?php if(count($data['items']) > 0): ?>
 
@@ -31,8 +38,8 @@
                                             <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/view/<?= $item->getId() ?>">View</a>
                                             <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/edit/<?= $item->getId() ?>">Edit</a>
                                         </div>
-                                        <small class="text-muted">
-                                            <?= $item->getUsername() ?>
+                                        <small class="text-muted text-right">
+                                            <?= $item->getUsername() ?> (<?= $item->getEmail() ?>)
                                         </small>
                                     </div>
                                 </div>
@@ -72,6 +79,15 @@
     </div>
 
 </main>
+
+<script>
+    function onOrderChange(selectEl) {
+        var loc = window.location;
+        var currentUrl = loc.protocol + '//';
+        currentUrl += loc.hostname + loc.pathname;
+        loc.href = currentUrl + '?orderby=' + selectEl.value;
+    }
+</script>
 
 </body>
 </html>
