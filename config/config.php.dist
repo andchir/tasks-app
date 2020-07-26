@@ -1,6 +1,10 @@
 <?php
 
 $config = [
+    'app' => [
+        'rootPath' => dirname(__DIR__) . '/',
+        'templatesDirPath' => 'templates'
+    ],
     'conn' => [
         'dbname' => 'dbname',
         'user' => 'username',
