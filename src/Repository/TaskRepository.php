@@ -7,6 +7,18 @@ use Doctrine\ORM\EntityRepository;
 class TaskRepository extends EntityRepository
 {
     /**
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getCount()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('count(t.id)');
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * @param int $offset
      * @param int $limit
      * @param string $sortBy

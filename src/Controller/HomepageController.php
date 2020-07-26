@@ -16,14 +16,17 @@ class HomepageController extends BaseController {
         $orderBy = !empty($_GET['orderby']) && in_array($_GET['orderby'], $orderByFields)
             ? $_GET['orderby']
             : $orderByFields[0];
-        $page = !empty($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 
-        $items = $repository->findItemsList(3, 0, $orderBy);
+        $totalItems = $repository->getCount();
+        $pagesData = self::getPagesData($totalItems, 3, $orderBy);
+
+        $items = $repository->findItemsList($pagesData['perPage'], $pagesData['offset'], $orderBy);
 
         return $this->getPage('homepage', [
             'items' => $items,
             'orderBy' => $orderBy,
-            'page' => $page
+            'totalItems' => $totalItems,
+            'pages' => $pagesData
         ]);
     }
 }

@@ -99,6 +99,31 @@ class BaseController {
     }
 
     /**
+     * Get pages data
+     * @param $totalItems
+     * @param int $perPage
+     * @param string $orderBy
+     * @return array
+     */
+    public static function getPagesData($totalItems, $perPage = 12, $orderBy = 'id')
+    {
+        $pages = array(
+            'current' => 1,
+            'total' => 0,
+            'perPage' => $perPage,
+            'offset' => 0,
+            'orderBy' => $orderBy
+        );
+        $pages['current'] = !empty($_GET['page']) && is_numeric($_GET['page'])
+            ? $_GET['page']
+            : 1;
+        $pages['total'] = ceil($totalItems / $pages['perPage']);
+        $pages['offset'] = $pages['perPage'] * ($pages['current'] - 1);
+
+        return $pages;
+    }
+
+    /**
      * @param string $string
      * @param bool $isHTMLAllowed
      * @return string
