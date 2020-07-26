@@ -14,14 +14,18 @@
 
                     <h1>Sign in</h1>
 
-                    <form action="" method="post">
+                    <?php if (!empty($data['message'])): ?>
+                        <div class="alert alert-<?= $data['messageType'] ?>"><?= $data['message'] ?></div>
+                    <?php endif; ?>
+
+                    <form action="<?= $config['basePath'] ?>auth" method="post">
                         <div class="form-group">
-                            <label for="inputEmail" class="sr-only">Email address</label>
-                            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                            <label for="inputUsername" class="sr-only">Username or email</label>
+                            <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username or email" value="<?php echo isset($data['requestData']['username']) ? $data['requestData']['username'] : ''; ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="inputPassword" class="sr-only">Password</label>
-                            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                            <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>

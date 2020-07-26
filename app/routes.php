@@ -1,10 +1,10 @@
 <?php
 
-use \App\Controller\HomepageController;
-use \App\Controller\AuthController;
+use App\Controller\HomepageController;
+use App\Controller\AuthController;
 use App\Controller\TaskController;
-use \Doctrine\ORM\EntityManagerInterface;
-use \Bramus\Router\Router;
+use Doctrine\ORM\EntityManagerInterface;
+use Bramus\Router\Router;
 
 /** @var array $config */
 /** @var EntityManagerInterface $entityManager */
@@ -23,9 +23,17 @@ $router->match('GET', '/', function () use ($config, $entityManager) {
 });
 
 // Authorization
-$router->match('GET', '/auth', function () use ($config, $entityManager) {
+$router->mount('/auth', function() use ($router, $config, $entityManager) {
+
     $controller = new AuthController($config['app'], $entityManager);
-    echo $controller->authAction();
+
+    $router->match('GET|POST', '/', function () use ($controller) {
+        echo $controller->authAction();
+    });
+
+    $router->match('GET', '/logout', function () use ($controller) {
+        $controller->logoutAction();
+    });
 });
 
 // Tasks

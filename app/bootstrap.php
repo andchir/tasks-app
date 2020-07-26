@@ -2,7 +2,7 @@
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use \Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMException;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/config/config.php';

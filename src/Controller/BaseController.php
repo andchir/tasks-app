@@ -98,6 +98,12 @@ class BaseController {
         return $output;
     }
 
+    public static function getUser()
+    {
+        $user = self::sessionGet('user');
+        return !empty($user['id']) ? $user : null;
+    }
+
     /**
      * Get pages data
      * @param $totalItems
@@ -105,7 +111,7 @@ class BaseController {
      * @param string $orderBy
      * @return array
      */
-    public static function getPagesData($totalItems, $perPage = 12, $orderBy = 'id')
+    public static function getPagesData($totalItems, $perPage = 12, $orderBy = 'id'): array
     {
         $pages = array(
             'current' => 1,
@@ -138,5 +144,48 @@ class BaseController {
             $config->set('HTML.Allowed', '');
         }
         return $purifier->purify($string);
+    }
+
+    /**
+     * @param string $redirectUrl
+     * @param bool $permanent
+     */
+    public static function redirectTo(string $redirectUrl, bool $permanent = false): void
+    {
+        $hostUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        if (strpos($redirectUrl, $hostUrl) === false) {
+            $redirectUrl = $hostUrl . $redirectUrl;
+        }
+        header('Location: ' . $redirectUrl, true, $permanent ? 301 : 302);
+        exit;
+    }
+
+    /**
+     * @param string $name
+     * @return array|null
+     */
+    static function sessionGet(string $name)
+    {
+        return !empty($_SESSION[$name])
+            ? $_SESSION[$name]
+            : null;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $data
+     */
+    static function sessionSet(string $name, $data): void
+    {
+        $_SESSION[$name] = $data;
+    }
+
+    /**
+     * @param string $name
+     */
+    static function sessionDelete(string $name): void
+    {
+        $_SESSION[$name] = null;
+        unset($_SESSION[$name]);
     }
 }

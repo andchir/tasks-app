@@ -1,3 +1,6 @@
+<?php
+$user = \App\Controller\BaseController::getUser();
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,9 +20,19 @@
             <a href="<?= $config['basePath'] ?>" class="navbar-brand d-flex align-items-center">
                 <strong><?= $config['appName'] ?></strong>
             </a>
-            <a class="btn btn-primary" href="<?= $config['basePath'] ?>auth">
-                Sign in
-            </a>
+            <div class="text-white">
+                <?php if($user): ?>
+                    You are logged in as
+                    <b><?= $user['username'] ?></b>
+                    <a class="btn btn-info ml-3" href="<?= $config['basePath'] ?>auth/logout">
+                        Sign out
+                    </a>
+                <?php else: ?>
+                    <a class="btn btn-primary" href="<?= $config['basePath'] ?>auth">
+                        Sign in
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </header>
