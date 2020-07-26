@@ -1,0 +1,11 @@
+<?php
+
+$config = [
+    'conn' => [
+        'dbname' => 'dbname',
+        'user' => 'username',
+        'password' => 'your_password',
+        'host' => 'localhost',
+        'driver' => 'pdo_mysql'
+    ]
+];
