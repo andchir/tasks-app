@@ -35,7 +35,9 @@
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group mr-2">
                                             <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/view/<?= $item->getId() ?>">View</a>
-                                            <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/edit/<?= $item->getId() ?>">Edit</a>
+                                            <?php if(\App\Controller\BaseController::getUser()): ?>
+                                                <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/edit/<?= $item->getId() ?>">Edit</a>
+                                            <?php endif; ?>
                                         </div>
                                         <small class="text-muted text-right">
                                             <?= $item->getUsername() ?> (<?= $item->getEmail() ?>)

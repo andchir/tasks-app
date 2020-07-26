@@ -44,4 +44,8 @@ $router->mount('/tasks', function() use ($router, $config, $entityManager) {
     $router->match('GET|POST', '/add', function() use ($controller) {
         echo $controller->addPageAction();
     });
+
+    $router->match('GET|POST', '/edit/(\d+)', function($id) use ($controller) {
+        echo $controller->updatePageAction($id);
+    });
 });
