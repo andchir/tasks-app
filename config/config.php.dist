@@ -2,7 +2,10 @@
 
 $config = [
     'app' => [
-        'rootPath' => dirname(__DIR__) . '/',
+        'appName' => 'Tasks',
+        'lang' => 'en',
+        'basePath' => '/',
+        'rootPath' => dirname(__DIR__) . DIRECTORY_SEPARATOR,
         'templatesDirPath' => 'templates'
     ],
     'conn' => [
