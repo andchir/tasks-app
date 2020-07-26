@@ -1,0 +1,10 @@
+{
+    "name": "andrew/tasks-app",
+    "authors": [
+        {
+            "name": "andchir",
+            "email": "andchir@gmail.com"
+        }
+    ],
+    "require": {}
+}
