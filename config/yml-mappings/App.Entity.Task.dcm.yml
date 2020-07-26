@@ -1,0 +1,17 @@
+App\Entity\Task:
+    type: entity
+    table: tasks
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        username:
+            type: string
+        email:
+            type: string
+        status:
+            type: string
+        description:
+            type: text
