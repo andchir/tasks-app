@@ -33,7 +33,7 @@ class HomepageController extends BaseController {
 
         // Redirect to the first page if no records were found
         if (count($items) === 0 && intval($pagesData['current']) > 1) {
-            self::redirectTo('/');
+            self::redirectTo($this->config['basePath']);
         }
 
         return $this->getPage('homepage', [

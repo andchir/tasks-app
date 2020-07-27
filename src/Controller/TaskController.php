@@ -49,7 +49,7 @@ class TaskController extends BaseController {
     {
         $user = self::getUser();
         if (!$user) {
-            self::redirectTo('/auth');
+            self::redirectTo($this->config['basePath'] . 'auth');
         }
 
         $data = [
@@ -169,7 +169,7 @@ class TaskController extends BaseController {
     {
         $user = self::getUser();
         if (!$user) {
-            self::redirectTo('/auth');
+            self::redirectTo($this->config['basePath'] . 'auth');
         }
         $repository = $this->entityManager->getRepository(Task::class);
 
@@ -185,7 +185,7 @@ class TaskController extends BaseController {
                 return;
             }
 
-            $refererIrl = $_SERVER['HTTP_REFERER'] ?? '/';
+            $refererIrl = $_SERVER['HTTP_REFERER'] ?? $this->config['basePath'];
             self::redirectTo($refererIrl);
 
         } else {

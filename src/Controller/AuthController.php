@@ -69,7 +69,7 @@ class AuthController extends BaseController {
     public function logoutAction(): void
     {
         self::sessionDelete('user');
-        $refererIrl = $_SERVER['HTTP_REFERER'] ?? '/';
+        $refererIrl = $_SERVER['HTTP_REFERER'] ?? $this->config['basePath'];
         self::redirectTo($refererIrl);
     }
 }

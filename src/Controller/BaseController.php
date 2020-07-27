@@ -158,7 +158,8 @@ class BaseController {
      */
     public static function redirectTo(string $redirectUrl, bool $permanent = false): void
     {
-        $hostUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
+        $protocol = $_SERVER['SERVER_PORT'] == 443 ? 'https://' : 'http://';
+        $hostUrl = $protocol . $_SERVER['HTTP_HOST'];
         if (strpos($redirectUrl, $hostUrl) === false) {
             $redirectUrl = $hostUrl . $redirectUrl;
         }
