@@ -96,29 +96,6 @@ class TaskController extends BaseController {
     }
 
     /**
-     * @param string $itemId
-     * @return string
-     */
-    public function viewPageAction(string $itemId): string
-    {
-        $repository = $this->entityManager->getRepository(Task::class);
-
-        /** @var Task $task */
-        $task = $repository->findOneBy(['id' => (int)$itemId]);
-
-        if (!$task) {
-            $this->setMessage('Item not found.');
-        }
-
-        return $this->getPage('task_view', [
-            'itemId' => $itemId,
-            'message' => $this->getMessage(),
-            'messageType' => $this->getMessageType(),
-            'item' => $task
-        ]);
-    }
-
-    /**
      * @return array
      */
     public function getPostData(): array
@@ -179,6 +156,37 @@ class TaskController extends BaseController {
             $this->entityManager->flush();
         } catch (ORMException $e) {
             $this->setMessage('An error occurred while creating/updating a record in the database.');
+        }
+    }
+
+    /**
+     * @param string $itemId
+     */
+    public function deleteAction(string $itemId): void
+    {
+        $user = self::getUser();
+        if (!$user) {
+            self::redirectTo('/auth');
+        }
+        $repository = $this->entityManager->getRepository(Task::class);
+
+        /** @var Task $task */
+        $task = $repository->findOneBy(['id' => (int) $itemId]);
+
+        if ($task) {
+            try {
+                $this->entityManager->remove($task);
+                $this->entityManager->flush();
+            } catch (ORMException $e) {
+                echo 'An error occurred while deleting a record from the database.';
+                return;
+            }
+
+            $refererIrl = $_SERVER['HTTP_REFERER'] ?? '/';
+            self::redirectTo($refererIrl);
+
+        } else {
+            echo 'Item not found.';
         }
     }
 }

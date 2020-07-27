@@ -1,6 +1,7 @@
 <?php
 /** @var array $config */
 /** @var array $data */
+/** @var (App\Entity\Task)[] $data['items'] */
 ?>
 <?php include 'head.html.php'; ?>
 
@@ -23,40 +24,44 @@
 
             <?php if(count($data['items']) > 0): ?>
 
-                <div class="row">
-
                     <?php foreach ($data['items'] as $item): ?>
-                        <div class="col-md-4">
-                            <div class="card mb-4 shadow-sm">
-                                <div class="card-body">
-                                    <?php if($item->getStatus() == 'finished'): ?>
-                                        <div class="text-right">
-                                            <span class="badge badge-success">Finished</span>
-                                        </div>
-                                    <?php endif; ?>
-                                    <p class="card-text">
-                                        <?= $item->getDescriptionShort() ?>
-                                    </p>
-                                    <?php if($item->getEditedBy()): ?>
-                                        <p class="text-right text-muted">Edited by <b><?= $item->getEditedBy() ?></b>.</p>
-                                    <?php endif; ?>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="btn-group mr-2">
-                                            <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/view/<?= $item->getId() ?>">View</a>
-                                            <?php if(\App\Controller\BaseController::getUser()): ?>
-                                                <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/edit/<?= $item->getId() ?>">Edit</a>
-                                            <?php endif; ?>
-                                        </div>
-                                        <small class="text-muted text-right">
-                                            <?= $item->getUsername() ?> (<?= $item->getEmail() ?>)
-                                        </small>
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-body">
+
+                                <?php if($item->getStatus() == 'finished'): ?>
+                                    <div class="float-right">
+                                        <span class="badge badge-success">Finished</span>
                                     </div>
-                                </div>
+                                <?php endif; ?>
+                                <h4>
+                                    <a name="task<?= $item->getId() ?>" href="#task<?= $item->getId() ?>">
+                                        Task #<?= $item->getId() ?>
+                                    </a>
+                                </h4>
+
+                                <?php if(\App\Controller\BaseController::getUser()): ?>
+                                    <div class="float-right ml-3">
+                                        <div class="btn-group">
+                                            <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/edit/<?= $item->getId() ?>">Edit</a>
+                                            <a class="btn btn-sm btn-outline-danger" href="#" onclick="confirmAction('<?= $config['basePath'] ?>tasks/delete/<?= $item->getId() ?>'); return false;">Delete</a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                <p>
+                                    Author:
+                                    <b><?= $item->getUsername() ?></b>
+                                    <span class="text-muted">(<?= $item->getEmail() ?>)</span>
+                                </p>
+                                <?php if($item->getEditedBy()): ?>
+                                    <p class="text-muted">Edited by <b><?= $item->getEditedBy() ?></b>.</p>
+                                <?php endif; ?>
+                                <p>
+                                    <?= $item->getDescription() ?>
+                                </p>
+
                             </div>
                         </div>
                     <?php endforeach;?>
-
-                </div>
 
                 <?php include 'pagination.html.php'; ?>
 
@@ -77,6 +82,12 @@
         var currentUrl = loc.protocol + '//';
         currentUrl += loc.hostname + loc.pathname;
         loc.href = currentUrl + '?orderby=' + selectEl.value;
+    }
+
+    function confirmAction(href) {
+        if (confirm('Are you sure you want to delete this task?')) {
+            window.location.href = href;
+        }
     }
 </script>
 

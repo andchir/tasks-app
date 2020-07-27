@@ -20,12 +20,12 @@ class HomepageController extends BaseController {
         $totalItems = $repository->getCount();
         $pagesData = self::getPagesData($totalItems, 3, $orderBy);
 
-        $items = $repository->findItemsList(
-            $pagesData['perPage'],
-            $pagesData['offset'],
-            $orderBy,
-            $orderBy === 'status' ? 'DESC' : 'ASC'
-        );
+        $items = $repository->findItemsList($pagesData['perPage'], $pagesData['offset'], $orderBy);
+
+        // Redirect to the first page if no records were found
+        if (count($items) === 0 && intval($pagesData['current']) > 1) {
+            self::redirectTo('/');
+        }
 
         return $this->getPage('homepage', [
             'items' => $items,
