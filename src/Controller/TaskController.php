@@ -96,6 +96,29 @@ class TaskController extends BaseController {
     }
 
     /**
+     * @param string $itemId
+     * @return string
+     */
+    public function viewPageAction(string $itemId): string
+    {
+        $repository = $this->entityManager->getRepository(Task::class);
+
+        /** @var Task $task */
+        $task = $repository->findOneBy(['id' => (int)$itemId]);
+
+        if (!$task) {
+            $this->setMessage('Item not found.');
+        }
+
+        return $this->getPage('task_view', [
+            'itemId' => $itemId,
+            'message' => $this->getMessage(),
+            'messageType' => $this->getMessageType(),
+            'item' => $task
+        ]);
+    }
+
+    /**
      * @return array
      */
     public function getPostData(): array
