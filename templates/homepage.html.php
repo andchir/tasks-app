@@ -55,9 +55,9 @@
                                 <?php if($item->getEditedBy()): ?>
                                     <p class="text-muted">Edited by <b><?= $item->getEditedBy() ?></b>.</p>
                                 <?php endif; ?>
-                                <p>
+                                <div>
                                     <?= $item->getDescription() ?>
-                                </p>
+                                </div>
 
                             </div>
                         </div>
