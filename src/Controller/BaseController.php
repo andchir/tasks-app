@@ -77,6 +77,7 @@ class BaseController {
     }
 
     /**
+     * Get HTML code of the page
      * @param string $templateName
      * @param array $data
      * @return string
@@ -98,6 +99,10 @@ class BaseController {
         return $output;
     }
 
+    /**
+     * Get user data
+     * @return array|null
+     */
     public static function getUser()
     {
         $user = self::sessionGet('user');
@@ -105,7 +110,7 @@ class BaseController {
     }
 
     /**
-     * Get pages data
+     * Get pages data by request
      * @param $totalItems
      * @param int $perPage
      * @param string $orderBy
@@ -130,6 +135,7 @@ class BaseController {
     }
 
     /**
+     * Clean string
      * @param string $string
      * @param bool $isHTMLAllowed
      * @return string

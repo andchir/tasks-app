@@ -4,9 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Repository\TaskRepository;
+use Doctrine\ORM\UnexpectedResultException;
 
 class HomepageController extends BaseController {
 
+    /**
+     * Home page
+     * @return string
+     */
     public function indexAction(): string
     {
         /** @var TaskRepository $repository */
@@ -17,7 +22,11 @@ class HomepageController extends BaseController {
             ? $_GET['orderby']
             : $orderByFields[0];
 
-        $totalItems = $repository->getCount();
+        try {
+            $totalItems = $repository->getCount();
+        } catch (UnexpectedResultException $e) {
+            $totalItems = 0;
+        }
         $pagesData = self::getPagesData($totalItems, 3, $orderBy);
 
         $items = $repository->findItemsList($pagesData['perPage'], $pagesData['offset'], $orderBy);

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Entity\User;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
 class TaskController extends BaseController {
@@ -42,6 +41,7 @@ class TaskController extends BaseController {
     }
 
     /**
+     * Update task
      * @param string $itemId
      * @return string
      */
@@ -96,6 +96,7 @@ class TaskController extends BaseController {
     }
 
     /**
+     * Get form data
      * @return array
      */
     public function getPostData(): array
@@ -130,6 +131,7 @@ class TaskController extends BaseController {
     }
 
     /**
+     * Save task to database
      * @param Task $task
      * @param array $requestData
      * @param string $status
@@ -160,6 +162,7 @@ class TaskController extends BaseController {
     }
 
     /**
+     * Delete task item
      * @param string $itemId
      */
     public function deleteAction(string $itemId): void

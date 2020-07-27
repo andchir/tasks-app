@@ -7,6 +7,12 @@ use App\Repository\UserRepository;
 
 class AuthController extends BaseController {
 
+    /**
+     * Authorization page
+     * @return string
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function authAction(): string
     {
         $user = self::getUser();
@@ -63,6 +69,7 @@ class AuthController extends BaseController {
     public function logoutAction(): void
     {
         self::sessionDelete('user');
-        self::redirectTo('/');
+        $refererIrl = $_SERVER['HTTP_REFERER'] ?? '/';
+        self::redirectTo($refererIrl);
     }
 }
