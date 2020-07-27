@@ -20,7 +20,12 @@ class HomepageController extends BaseController {
         $totalItems = $repository->getCount();
         $pagesData = self::getPagesData($totalItems, 3, $orderBy);
 
-        $items = $repository->findItemsList($pagesData['perPage'], $pagesData['offset'], $orderBy);
+        $items = $repository->findItemsList(
+            $pagesData['perPage'],
+            $pagesData['offset'],
+            $orderBy,
+            $orderBy === 'status' ? 'DESC' : 'ASC'
+        );
 
         return $this->getPage('homepage', [
             'items' => $items,

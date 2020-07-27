@@ -29,9 +29,17 @@
                         <div class="col-md-4">
                             <div class="card mb-4 shadow-sm">
                                 <div class="card-body">
+                                    <?php if($item->getStatus() == 'finished'): ?>
+                                        <div class="text-right">
+                                            <span class="badge badge-success">Finished</span>
+                                        </div>
+                                    <?php endif; ?>
                                     <p class="card-text">
                                         <?= $item->getDescriptionShort() ?>
                                     </p>
+                                    <?php if($item->getEditedBy()): ?>
+                                        <p class="text-right text-muted">Edited by <b><?= $item->getEditedBy() ?></b>.</p>
+                                    <?php endif; ?>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group mr-2">
                                             <a class="btn btn-sm btn-outline-secondary" href="<?= $config['basePath'] ?>tasks/view/<?= $item->getId() ?>">View</a>

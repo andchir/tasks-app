@@ -28,8 +28,12 @@ class Task
      * @var string
      */
     protected $description;
+    /**
+     * @var string
+     */
+    protected $editedBy = '';
 
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
@@ -85,5 +89,16 @@ class Task
             $description = trim(mb_substr($description, 0, 100), " \t\n\r\0\x0B.,") . '...';
         }
         return $description;
+    }
+
+    public function setEditedBy(string $editedBy): Task
+    {
+        $this->editedBy = $editedBy;
+        return $this;
+    }
+
+    public function getEditedBy(): string
+    {
+        return $this->editedBy;
     }
 }

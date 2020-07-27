@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 
@@ -16,7 +17,8 @@ class TaskController extends BaseController {
     {
         $data = [
             'formActionUrl' => $this->config['basePath'] . 'tasks/add',
-            'requestData' => []
+            'requestData' => [],
+            'user' => self::getUser()
         ];
         if (isset($_POST['username'])) {
 
@@ -24,18 +26,7 @@ class TaskController extends BaseController {
             if (!$this->getIsError()) {
 
                 $task = new Task();
-                $task
-                    ->setUsername($requestData['username'])
-                    ->setEmail($requestData['email'])
-                    ->setDescription($requestData['description'])
-                    ->setStatus(Task::STATUS_CREATED);
-
-                try {
-                    $this->entityManager->persist($task);
-                    $this->entityManager->flush();
-                } catch (ORMException $e) {
-                    $this->setMessage('An error occurred while creating a record in the database.');
-                }
+                $this->saveTask($task, $requestData);
 
                 if (!$this->getIsError()) {
                     $this->setMessage('Task added successfully.', self::MESSAGE_TYPE_SUCCESS);
@@ -47,14 +38,14 @@ class TaskController extends BaseController {
         $data['message'] = $this->getMessage();
         $data['messageType'] = $this->getMessageType();
 
-        return $this->getPage('add_task', $data);
+        return $this->getPage('task_form', $data);
     }
 
     /**
      * @param string $itemId
      * @return string
      */
-    public function updatePageAction(string $itemId)
+    public function updatePageAction(string $itemId): string
     {
         $user = self::getUser();
         if (!$user) {
@@ -64,40 +55,44 @@ class TaskController extends BaseController {
         $data = [
             'formActionUrl' => $this->config['basePath'] . 'tasks/edit/' . $itemId,
             'itemId' => $itemId,
-            'requestData' => []
+            'requestData' => [],
+            'user' => $user
         ];
         $repository = $this->entityManager->getRepository(Task::class);
 
-        if (isset($_POST['username'])) {
-            $requestData = $this->getPostData();
-            if (!$this->getIsError()) {
+        /** @var Task $task */
+        $task = $repository->findOneBy(['id' => (int) $itemId]);
 
+        if (!$task) {
 
+            $this->setMessage('Item not found.');
+            $data['formActionUrl'] = '';
 
-            }
-            $data['requestData'] = $requestData;
         } else {
 
-            /** @var Task $task */
-            $task = $repository->findOneBy(['id' => (int) $itemId]);
-
-            if (!$task) {
-
-                $this->setMessage('Item not found.');
-                $data['formActionUrl'] = '';
-
+            if (isset($_POST['username'])) {
+                $requestData = $this->getPostData();
+                if (!$this->getIsError()) {
+                    $this->saveTask($task, $requestData);
+                    if (!$this->getIsError()) {
+                        $this->setMessage('Task saved successfully.', self::MESSAGE_TYPE_SUCCESS);
+                    }
+                }
+                $data['requestData'] = $requestData;
             } else {
                 $data['requestData'] = [
                     'username' => $task->getUsername(),
                     'email' => $task->getEmail(),
-                    'description' => $task->getDescription()
+                    'description' => $task->getDescription(),
+                    'finished' => $task->getStatus() === Task::STATUS_FINISHED
                 ];
             }
         }
+
         $data['message'] = $this->getMessage();
         $data['messageType'] = $this->getMessageType();
 
-        return $this->getPage('add_task', $data);
+        return $this->getPage('task_form', $data);
     }
 
     /**
@@ -115,6 +110,7 @@ class TaskController extends BaseController {
             'description' => isset($_POST['username'])
                 ? self::cleanString($_POST['description'], true)
                 : '',
+            'finished' => !empty($_POST['finished'])
         ];
 
         if (!$requestData['username']) {
@@ -131,5 +127,35 @@ class TaskController extends BaseController {
         }
 
         return $requestData;
+    }
+
+    /**
+     * @param Task $task
+     * @param array $requestData
+     * @param string $status
+     */
+    public function saveTask(Task $task, array $requestData, string $status = Task::STATUS_CREATED): void
+    {
+        $task
+            ->setUsername($requestData['username'])
+            ->setEmail($requestData['email'])
+            ->setDescription($requestData['description'])
+            ->setStatus($status);
+
+        $user = self::getUser();
+        if ($task->getId() && $user && $user['role'] === User::ROLE_ADMIN) {
+            $task
+                ->setEditedBy($user['username'])
+                ->setStatus(!empty($requestData['finished']) ? Task::STATUS_FINISHED : Task::STATUS_CREATED);
+        }
+
+        try {
+            if (!$task->getId()) {
+                $this->entityManager->persist($task);
+            }
+            $this->entityManager->flush();
+        } catch (ORMException $e) {
+            $this->setMessage('An error occurred while creating/updating a record in the database.');
+        }
     }
 }

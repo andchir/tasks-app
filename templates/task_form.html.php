@@ -29,6 +29,14 @@
 
                     <?php if(!empty($data['formActionUrl'])): ?>
                         <form action="<?= $data['formActionUrl'] ?>" method="post">
+                            <?php if($data['user'] && $data['user']['role'] === 'admin'): ?>
+                                <div class="form-group text-right">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="inputFinished" name="finished" value="1"<?php if(!empty($data['requestData']['finished'])): ?> checked="checked"<?php endif; ?>>
+                                        <label class="custom-control-label" for="inputFinished">Finished</label>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <div class="form-group">
                                 <label for="inputUsername">Username</label>
                                 <input type="text" id="inputUsername" name="username" class="form-control" value="<?php echo isset($data['requestData']['username']) ? $data['requestData']['username'] : ''; ?>">

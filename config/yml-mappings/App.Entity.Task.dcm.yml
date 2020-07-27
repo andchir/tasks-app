@@ -16,3 +16,5 @@ App\Entity\Task:
             type: string
         description:
             type: text
+        editedBy:
+            type: text
